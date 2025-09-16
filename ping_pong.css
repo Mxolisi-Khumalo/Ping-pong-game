@@ -1,0 +1,92 @@
+/* Background gradient for the game area */
+body {
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    min-height: 100vh;
+    margin: 0;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Game container styling */
+.game-container {
+    background: rgba(255, 255, 255, 0.08);
+    border: 3px solid #fff;
+    border-radius: 24px;
+    box-shadow: 0 8px 32px 0 rgba(121, 16, 16, 0.37);
+    width: 800px;
+    height: 500px;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Center dividing line */
+.divider {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    width: 4px;
+    height: 100%;
+    background: repeating-linear-gradient(
+        to bottom,
+        #fff,
+        #fff 20px,
+        transparent 20px,
+        transparent 40px
+    );
+    transform: translateX(-50%);
+    opacity: 0.7;
+}
+
+/* Paddle styling */
+.paddle {
+    position: absolute;
+    width: 16px;
+    height: 100px;
+    background: linear-gradient(180deg, #f7971e 0%, #ffd200 100%);
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+/* Ball styling */
+.ball {
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    background: radial-gradient(circle at 30% 30%, #fff 70%, #f7971e 100%);
+    border-radius: 50%;
+    box-shadow: 0 0 16px 4px #ffd20080;
+}
+
+/* Scoreboard styling */
+.scoreboard {
+    position: absolute;
+    top: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #fff;
+    font-size: 2.5rem;
+    font-weight: bold;
+    letter-spacing: 8px;
+    text-shadow: 0 2px 8px #0008;
+    z-index: 2;
+}
+
+/* Decorative glow around the game area */
+.game-container::before {
+    content: '';
+    position: absolute;
+    inset: -16px;
+    border-radius: 32px;
+    background: radial-gradient(circle, #ffd20044 0%, transparent 80%);
+    z-index: 0;
+    pointer-events: none;
+}
+
+:root {
+    --bg-color: #880000;
+    --paddle-color: #fff;
+    --ball-color: #fff;
+    --text-color: #fff;
+}

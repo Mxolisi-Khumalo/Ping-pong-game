@@ -3,10 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Ping Pong Game</title>
-    <style>
-        body { background: #222; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        canvas { background: #111; display: block; border: 2px solid #fff; }
-    </style>
+    <link rel="stylesheet" href="ping_pong.css">
 </head>
 <body>
     <canvas id="pong" width="600" height="400"></canvas>
@@ -21,6 +18,10 @@
         const ball = { x: canvas.width/2, y: canvas.height/2, r: 8, speed: 4, dx: 4, dy: 4 };
 
         let playerScore = 0, aiScore = 0;
+
+        function getCSSVar(name) {
+            return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+        }
 
         function drawRect(x, y, w, h, color) {
             ctx.fillStyle = color;
@@ -49,12 +50,12 @@
         }
 
         function draw() {
-            drawRect(0, 0, canvas.width, canvas.height, "#111");
-            drawRect(player.x, player.y, paddleWidth, paddleHeight, "#fff");
-            drawRect(ai.x, ai.y, paddleWidth, paddleHeight, "#fff");
-            drawCircle(ball.x, ball.y, ball.r, "#fff");
-            drawText(playerScore, canvas.width/4, 50, "#fff");
-            drawText(aiScore, 3*canvas.width/4, 50, "#fff");
+            drawRect(0, 0, canvas.width, canvas.height, getCSSVar('--bg-color'));
+            drawRect(player.x, player.y, paddleWidth, paddleHeight, getCSSVar('--paddle-color'));
+            drawRect(ai.x, ai.y, paddleWidth, paddleHeight, getCSSVar('--paddle-color'));
+            drawCircle(ball.x, ball.y, ball.r, getCSSVar('--ball-color'));
+            drawText(playerScore, canvas.width/4, 50, getCSSVar('--text-color'));
+            drawText(aiScore, 3*canvas.width/4, 50, getCSSVar('--text-color'));
         }
 
         function update() {
@@ -123,4 +124,34 @@
         game();
     </script>
 </body>
-</html>
+<!-- 
+<!-- 
+To let CSS control the appearance, you can only style the canvas element itself (e.g., border, background-color). 
+The content drawn inside the canvas (paddles, ball, etc.) must still be styled via JavaScript. 
+If you want to control colors via CSS, you can define CSS variables and read them in JS:
+
+Example in your CSS (ping_pong.css):
+:root {
+    --bg-color: #111;
+    --paddle-color: #fff;
+    --ball-color: #fff;
+    --text-color: #fff;
+}
+
+Then in your JS, read them:
+function getCSSVar(name) {
+    return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+}
+
+Replace hardcoded colors in drawRect, drawCircle, drawText:
+drawRect(0, 0, canvas.width, canvas.height, getCSSVar('--bg-color'));
+drawRect(player.x, player.y, paddleWidth, paddleHeight, getCSSVar('--paddle-color'));
+drawRect(ai.x, ai.y, paddleWidth, paddleHeight, getCSSVar('--paddle-color'));
+drawCircle(ball.x, ball.y, ball.r, getCSSVar('--ball-color'));
+drawText(playerScore, canvas.width/4, 50, getCSSVar('--text-color'));
+drawText(aiScore, 3*canvas.width/4, 50, getCSSVar('--text-color'));
+
+This way, you can control the colors from your CSS file.
+-->
+
+
