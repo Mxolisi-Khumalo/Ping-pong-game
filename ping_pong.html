@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ping Pong Game</title>
+    <style>
+        body { background: #222; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        canvas { background: #111; display: block; border: 2px solid #fff; }
+    </style>
+</head>
+<body>
+    <canvas id="pong" width="600" height="400"></canvas>
+    <script>
+        const canvas = document.getElementById('pong');
+        const ctx = canvas.getContext('2d');
+
+        // Game objects
+        const paddleWidth = 10, paddleHeight = 80;
+        const player = { x: 10, y: canvas.height/2 - paddleHeight/2, dy: 0 };
+        const ai = { x: canvas.width - paddleWidth - 10, y: canvas.height/2 - paddleHeight/2, dy: 0 };
+        const ball = { x: canvas.width/2, y: canvas.height/2, r: 8, speed: 4, dx: 4, dy: 4 };
+
+        let playerScore = 0, aiScore = 0;
+
+        function drawRect(x, y, w, h, color) {
+            ctx.fillStyle = color;
+            ctx.fillRect(x, y, w, h);
+        }
+
+        function drawCircle(x, y, r, color) {
+            ctx.fillStyle = color;
+            ctx.beginPath();
+            ctx.arc(x, y, r, 0, Math.PI*2);
+            ctx.closePath();
+            ctx.fill();
+        }
+
+        function drawText(text, x, y, color) {
+            ctx.fillStyle = color;
+            ctx.font = "32px Arial";
+            ctx.fillText(text, x, y);
+        }
+
+        function resetBall() {
+            ball.x = canvas.width/2;
+            ball.y = canvas.height/2;
+            ball.dx = -ball.dx;
+            ball.dy = 4 * (Math.random() > 0.5 ? 1 : -1);
+        }
+
+        function draw() {
+            drawRect(0, 0, canvas.width, canvas.height, "#111");
+            drawRect(player.x, player.y, paddleWidth, paddleHeight, "#fff");
+            drawRect(ai.x, ai.y, paddleWidth, paddleHeight, "#fff");
+            drawCircle(ball.x, ball.y, ball.r, "#fff");
+            drawText(playerScore, canvas.width/4, 50, "#fff");
+            drawText(aiScore, 3*canvas.width/4, 50, "#fff");
+        }
+
+        function update() {
+            // Move player
+            player.y += player.dy;
+            if (player.y < 0) player.y = 0;
+            if (player.y + paddleHeight > canvas.height) player.y = canvas.height - paddleHeight;
+
+            // Move AI
+            if (ball.y < ai.y + paddleHeight/2) ai.y -= 3;
+            else if (ball.y > ai.y + paddleHeight/2) ai.y += 3;
+            if (ai.y < 0) ai.y = 0;
+            if (ai.y + paddleHeight > canvas.height) ai.y = canvas.height - paddleHeight;
+
+            // Move ball
+            ball.x += ball.dx;
+            ball.y += ball.dy;
+
+            // Top and bottom collision
+            if (ball.y - ball.r < 0 || ball.y + ball.r > canvas.height) {
+                ball.dy = -ball.dy;
+            }
+
+            // Paddle collision
+            let paddle = (ball.x < canvas.width/2) ? player : ai;
+            if (
+                ball.x - ball.r < paddle.x + paddleWidth &&
+                ball.x + ball.r > paddle.x &&
+                ball.y + ball.r > paddle.y &&
+                ball.y - ball.r < paddle.y + paddleHeight
+            ) {
+                ball.dx = -ball.dx;
+                // Add some randomness
+                let angle = ((ball.y - (paddle.y + paddleHeight/2)) / (paddleHeight/2)) * Math.PI/4;
+                let speed = Math.sqrt(ball.dx*ball.dx + ball.dy*ball.dy) + 0.2;
+                ball.dx = (ball.dx > 0 ? 1 : -1) * speed * Math.cos(angle);
+                ball.dy = speed * Math.sin(angle);
+            }
+
+            // Score
+            if (ball.x - ball.r < 0) {
+                aiScore++;
+                resetBall();
+            }
+            if (ball.x + ball.r > canvas.width) {
+                playerScore++;
+                resetBall();
+            }
+        }
+
+        function game() {
+            update();
+            draw();
+            requestAnimationFrame(game);
+        }
+
+        // Controls
+        document.addEventListener('keydown', e => {
+            if (e.key === 'ArrowUp') player.dy = -6;
+            if (e.key === 'ArrowDown') player.dy = 6;
+        });
+        document.addEventListener('keyup', e => {
+            if (e.key === 'ArrowUp' || e.key === 'ArrowDown') player.dy = 0;
+        });
+
+        game();
+    </script>
+</body>
+</html>
