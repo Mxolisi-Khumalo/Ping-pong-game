@@ -23,7 +23,7 @@ How to Play
 
 Installation and Setup
 You do not need any special setup. Just clone the repository and open the HTML file.
-  git clone https://github.com/your-username/ping-pong-game.git
+  git clone https://github.com/Mxolisi-Khumalo/ping-pong-game.git
   cd ping-pong-game
   open index.html
 
